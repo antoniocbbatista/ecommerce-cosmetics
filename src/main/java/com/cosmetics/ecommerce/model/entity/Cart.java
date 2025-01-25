@@ -15,7 +15,10 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @OneToOne
+    @JoinColumn(name = "costumer_id", nullable = false)
     private Costumer costumer;
 
+    @OneToMany(mappedBy = "cart", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<CartItem> cartItems;
 }

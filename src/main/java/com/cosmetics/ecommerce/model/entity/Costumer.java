@@ -25,7 +25,6 @@ public class Costumer {
 
     private Address address;
 
-    private List<Review> reviews;
-
-
+    @OneToOne(mappedBy = "costumer")
+    private Cart cart;
 }

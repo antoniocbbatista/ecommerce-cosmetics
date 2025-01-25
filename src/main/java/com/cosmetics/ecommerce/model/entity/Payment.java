@@ -28,5 +28,7 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 }

@@ -29,6 +29,7 @@ public class Order {
 
     private Costumer costumer;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
     private Payment payment;

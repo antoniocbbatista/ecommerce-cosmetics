@@ -26,8 +26,8 @@ public class Product {
 
     private int stock;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
-
-    private List<Review> reviews;
 
 }

@@ -14,12 +14,16 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
 
     private int quantity;
 
     private Double unitPrice;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id")
     private Order order;
 
 }
