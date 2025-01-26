@@ -28,4 +28,7 @@ public class Address {
 
     private String cep;
 
+    @ManyToOne
+    @JoinColumn(name = "costumer_id")
+    private Costumer costumer;
 }

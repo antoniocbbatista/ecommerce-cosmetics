@@ -6,13 +6,14 @@ import com.cosmetics.ecommerce.model.enums.PaymentType;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Data
 @Table(name = "payment")
-public class Payment {
+public class Payment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,6 +30,6 @@ public class Payment {
     private PaymentStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "orders_id", nullable = false)
     private Order order;
 }

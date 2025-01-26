@@ -3,12 +3,15 @@ package com.cosmetics.ecommerce.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Data
+@Getter
 @Table(name = "product")
 public class Product {
 
