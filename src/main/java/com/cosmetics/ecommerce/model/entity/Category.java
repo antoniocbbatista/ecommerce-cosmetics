@@ -1,20 +1,20 @@
 package com.cosmetics.ecommerce.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Data
-@Getter
-@Setter
 @Table(name = "category")
-public class Category {
+public class Category implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,31 +22,17 @@ public class Category {
 
     private String name;
 
-    @ManyToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Product> products;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Product> products = new ArrayList<>();
 
-
-    public UUID getId() {
-        return id;
+    public void addProduct(Product product) {
+        products.add(product);
+        product.setCategory(this);
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void removeProduct(Product product) {
+        products.remove(product);
+        product.setCategory(null);
     }
 }

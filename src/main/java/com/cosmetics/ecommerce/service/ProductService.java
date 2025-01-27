@@ -1,5 +1,6 @@
 package com.cosmetics.ecommerce.service;
 
+import com.cosmetics.ecommerce.model.dto.CategoryDTO;
 import com.cosmetics.ecommerce.model.dto.ProductDTO;
 import com.cosmetics.ecommerce.model.entity.Category;
 import com.cosmetics.ecommerce.model.entity.Product;
@@ -39,27 +40,23 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDTO createProduct(ProductDTO productDTO){
+    public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = new Product();
 
-        Category category = null;
-        if (productDTO.category() != null && productDTO.category().getName() != null) {
-            String categoryName = productDTO.category().getName();
-            category = categoryRepository.findByName(categoryName)
-                    .orElseGet(() -> {
-                        Category newCategory = new Category();
-                        newCategory.setName(categoryName);
-                        return categoryRepository.save(newCategory);
-                    });
-        } else {
+        // Verifica se a categoria foi fornecida no DTO
+        if (productDTO.category() == null || productDTO.category().name() == null) {
             throw new IllegalArgumentException("Digite o nome da categoria");
         }
+        String categoryName = productDTO.category().name();
+        Category category = categoryRepository.findByName(categoryName)
+                .orElseGet(() -> {
+                    Category newCategory = new Category();
+                    newCategory.setName(categoryName);
+                    return newCategory;
+                });
         convertToProduct(productDTO, product);
         product.setCategory(category);
         product = productRepository.save(product);
-        category.getProducts().add(product);
-        product = productRepository.save(product);
-        categoryRepository.save(category);
         return new ProductDTO(product);
     }
 
@@ -78,24 +75,32 @@ public class ProductService {
     @Transactional
     public void delete(String name){
         Product product = productRepository.findByName(name);
-        Category category = product.getCategory();
-        productRepository.delete(product);
-        if (category != null && category.getProducts().isEmpty()) {
-            categoryRepository.delete(category);
+        if (product == null){
+            throw new IllegalArgumentException("Produto não encontrado: " + name);
         }
+
+        Category category = product.getCategory();
+        if (category != null){
+            category.removeProduct(product);
+            if (category.getProducts().isEmpty()){
+                categoryRepository.delete(category);
+            }
+        }
+        productRepository.delete(product);
     }
 
-    private ProductDTO convertToDTO (Product product) {
-        return new ProductDTO(product.getId(), product.getName(), product.getDescription(), product.getPrice(), product.getCategory()
-        , product.getImageUrl(), product.getStock());
+    private ProductDTO convertToDTO(Product product) {
+        return new ProductDTO(
+                product.getId(), product.getName(), product.getDescription(),
+                product.getPrice(), product.getImageUrl(),
+                product.getStock(), product.getCategory() != null ? new CategoryDTO(product.getCategory()) : null
+        );
     }
 
-    private void convertToProduct (ProductDTO productDTO, Product entity) {
+    private void convertToProduct(ProductDTO productDTO, Product entity) {
         entity.setName(productDTO.name());
         entity.setDescription(productDTO.description());
         entity.setPrice(productDTO.price());
-        entity.setCategory(new Category());
-        entity.getCategory().setId(productDTO.category().getId());
         entity.setImageUrl(productDTO.imageUrl());
         entity.setStock(productDTO.stock());
     }

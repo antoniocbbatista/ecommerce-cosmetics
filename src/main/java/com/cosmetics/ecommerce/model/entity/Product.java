@@ -1,6 +1,7 @@
 package com.cosmetics.ecommerce.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -12,7 +13,6 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Getter
 @Table(name = "product")
 public class Product implements Serializable {
 
@@ -30,8 +30,9 @@ public class Product implements Serializable {
 
     private int stock;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
+    @JsonBackReference
     private Category category;
 
 }
