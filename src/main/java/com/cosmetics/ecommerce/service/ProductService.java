@@ -43,7 +43,6 @@ public class ProductService {
     public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = new Product();
 
-        // Verifica se a categoria foi fornecida no DTO
         if (productDTO.category() == null || productDTO.category().name() == null) {
             throw new IllegalArgumentException("Digite o nome da categoria");
         }
@@ -57,6 +56,7 @@ public class ProductService {
         convertToProduct(productDTO, product);
         product.setCategory(category);
         product = productRepository.save(product);
+
         return new ProductDTO(product);
     }
 
