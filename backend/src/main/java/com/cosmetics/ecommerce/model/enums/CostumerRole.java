@@ -1,9 +1,9 @@
-package com.cosmetics.ecommerce.model.entity;
+package com.cosmetics.ecommerce.model.enums;
 
 import lombok.Getter;
 
 @Getter
-public enum CostumerRole {
+public enum  CostumerRole {
     ADMIN("admin"),
     USER("user");
 

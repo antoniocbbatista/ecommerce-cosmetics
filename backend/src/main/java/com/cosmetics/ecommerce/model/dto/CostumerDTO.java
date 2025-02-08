@@ -2,7 +2,7 @@ package com.cosmetics.ecommerce.model.dto;
 
 import com.cosmetics.ecommerce.model.entity.Address;
 import com.cosmetics.ecommerce.model.entity.Costumer;
-import com.cosmetics.ecommerce.model.entity.CostumerRole;
+import com.cosmetics.ecommerce.model.enums.CostumerRole;
 
 import java.util.List;
 import java.util.UUID;
